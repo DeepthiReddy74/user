@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #6b73ff 0%, #fffb00 100%);
+      color: #f0f0f0;
+      overflow-x: hidden;
+    }
+    header {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav button {
+      background: transparent;
+      border: 2px solid transparent;
+      color: #f0f0f0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+    nav button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+      z-index: 0;
+    }
+    nav button:hover::before {
+      width: 200%;
+      height: 500%;
+    }
+    nav button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #ffffff;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+      transform: scale(1.1);
+      z-index: 1;
+      color: #ffffff;
+    }
+    #logoutBtn {
+      background: #ff4b5c;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      transition: background-color 0.4s ease, transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255,75,92,0.5);
+    }
+    #logoutBtn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+      z-index: 0;
+    }
+    #logoutBtn:hover::before {
+      width: 200%;
+      height: 500%;
+    }
+    #logoutBtn:hover {
+      background-color: #ff2e44;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255,46,68,0.7);
+      z-index: 1;
+    }
+
+    /* New styles for two-column layout */
+    .container {
+      display: block;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      gap: 2rem;
+    }
+    main {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+    aside.profile-sidebar #profileDisplay {
+      margin-top: 1rem;
+      text-align: left;
+    }
+    aside.profile-sidebar #profileDisplay h3 {
+      margin-bottom: 1rem;
+      color: #00d4ff;
+      text-shadow: 0 0 8px #00d4ff;
+    }
+    aside.profile-sidebar #profileDisplay p {
+      margin: 0.5rem 0;
+    }
+    aside.profile-sidebar #profileDisplay img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    aside.profile-sidebar #message {
+      margin-top: 1rem;
+      font-weight: 700;
+      color: #00d4ff;
+      text-shadow: 0 0 8px #00d4ff;
+      text-align: center;
+    }
+    aside.profile-sidebar button#editProfileBtn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #28a745;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(40,167,69,0.5);
+      transition: background-color 0.3s ease;
+    }
+    aside.profile-sidebar button#editProfileBtn:hover {
+      background-color: #1e7e34;
+    }
+
+    /* Existing styles for category sections and items */
+    .category-section {
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation-fill-mode: forwards;
+      animation-duration: 0.7s;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    .category-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    .category-section:hover {
+      box-shadow: 0 16px 50px rgba(0,0,0,0.4);
+    }
+    .category-section h2 {
+      margin-bottom: 1.5rem;
+      color: #00d4ff;
+      font-weight: 700;
+      font-size: 2rem;
+      position: relative;
+      overflow: hidden;
+      text-shadow: 0 0 10px #00d4ff;
+    }
+    .category-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00d4ff, #6b73ff);
+      animation: slideLine 3s linear infinite;
+      border-radius: 2px;
+    }
+    @keyframes slideLine {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 100% 0;
+      }
+    }
+    .items-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    .item {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: calc(20% - 1rem);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation-fill-mode: forwards;
+      animation-duration: 0.6s;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #f0f0f0;
+    }
+    .item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .item:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      transform: scale(1.07);
+      z-index: 10;
+      cursor: pointer;
+    }
+    .item h3 {
+      margin: 0 0 0.75rem 0;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-shadow: 0 0 8px #00d4ff;
+    }
+    .item p {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.95rem;
+      color: #d0eaff;
+      text-shadow: 0 0 5px #007bff;
+    }
+    .item .price {
+      font-weight: 700;
+      color: #00d4ff;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 0 8px #00d4ff;
+    }
+    .item button {
+      margin: 0.25rem 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background-color 0.4s ease, transform 0.3s ease;
+      box-shadow: 0 0 10px rgba(0,123,255,0.5);
+      color: #f0f0f0;
+      background: linear-gradient(135deg, #007bff, #00d4ff);
+    }
+    .buy-btn:hover {
+      background: linear-gradient(135deg, #00d4ff, #6b73ff);
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0,212,255,0.7);
+    }
+    .cart-btn {
+      background: linear-gradient(135deg, #28a745, #00d4ff);
+      box-shadow: 0 0 10px rgba(40,167,69,0.5);
+    }
+    .cart-btn:hover {
+      background: linear-gradient(135deg, #00d4ff, #6b73ff);
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0,212,255,0.7);
+    }
+    .message {
+      text-align: center;
+      font-weight: 700;
+      margin-top: 1rem;
+      color: #00d4ff;
+      text-shadow: 0 0 8px #00d4ff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <button id="mensWearBtn">Mens Wear</button>
+      <button id="womensWearBtn">Womens Wear</button>
+      <button id="kidsBoysBtn">Kids Wear (Boys)</button>
+      <button id="kidsGirlsBtn">Kids Wear (Girls)</button>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </header>
+  <div class="container">
+    <main>
+      <h1>Welcome to ZUDIO</h1>
+      <p>Select a category from the header above or browse all items below.</p>
+
+      <section class="category-section" id="mensSection">
+        <h2>Mens Wear Items</h2>
+        <div class="items-container" id="mensItemsContainer">
+          <p class="message" id="mensLoadingMessage">Loading mens items...</p>
+        </div>
+      </section>
+
+      <section class="category-section" id="womensSection">
+        <h2>Womens Wear Items</h2>
+        <div class="items-container" id="womensItemsContainer">
+          <p class="message" id="womensLoadingMessage">Loading womens items...</p>
+        </div>
+      </section>
+
+      <section class="category-section" id="kidsBoysSection">
+        <h2>Kids Boys Wear Items</h2>
+        <div class="items-container" id="kidsBoysItemsContainer">
+          <p class="message" id="kidsBoysLoadingMessage">Loading kids boys items...</p>
+        </div>
+      </section>
+
+      <section class="category-section" id="kidsGirlsSection">
+        <h2>Kids Girls Wear Items</h2>
+        <div class="items-container" id="kidsGirlsItemsContainer">
+          <p class="message" id="kidsGirlsLoadingMessage">Loading kids girls items...</p>
+        </div>
+      </section>
+    </main>
+    <!-- Removed profile bar as per user request -->
+  </div>
+=======
+<<<<<<< SEARCH
+  .container {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      gap: 2rem;
+    }
+    main {
+      flex: 3;
+      text-align: center;
+    }
+    aside.profile-sidebar {
+      flex: 1;
+      background: #222222;
+      padding: 0.75rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      color: #f0f0f0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      max-width: 280px;
+      height: fit-content;
+      font-size: 0.85rem;
+    }
+    aside.profile-sidebar h1 {
+      margin-bottom: 0.75rem;
+      color: #00d4ff;
+      text-shadow: 0 0 8px #00d4ff;
+      font-size: 1.25rem;
+    }
+    aside.profile-sidebar form label {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+    aside.profile-sidebar form input[type="text"],
+    aside.profile-sidebar form input[type="url"],
+    aside.profile-sidebar form select,
+    aside.profile-sidebar form textarea {
+      width: 100%;
+      padding: 0.3rem;
+      margin-top: 0.2rem;
+      border-radius: 4px;
+      border: none;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    aside.profile-sidebar form textarea {
+      resize: vertical;
+    }
+    aside.profile-sidebar form button {
+      margin-top: 0.75rem;
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #007bff;
+      border: none;
+      border-radius: 20px;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,123,255,0.5);
+      transition: background-color 0.3s ease;
+    }
+    aside.profile-sidebar form button:hover {
+      background-color: #0056b3;
+    }
+=======
+  .container {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      gap: 2rem;
+    }
+    main {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  .profile-bar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    cursor: pointer;
+    border: 2px solid #00d4ff;
+    background-color: #222222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .profile-bar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <!-- Firebase Database -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3B45gEuZ2gxmohUUfpyesku_7aJHRKdg",
+      authDomain: "project-74a30.firebaseapp.com",
+      databaseURL: "https://project-74a30-default-rtdb.firebaseio.com",
+      projectId: "project-74a30",
+      storageBucket: "project-74a30.firebasestorage.app",
+      messagingSenderId: "609851447195",
+      appId: "1:609851447195:web:27bb49fb8b245e0f2b733e",
+      measurementId: "G-2VQBP3MNG1"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Redirect to login if not logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+      }
+    });
+
+    function displayItems(container, items, loadingMessageId) {
+      const containerEl = document.getElementById(container);
+      const loadingMessageEl = document.getElementById(loadingMessageId);
+      loadingMessageEl.style.display = 'none';
+      containerEl.innerHTML = '';
+      if (!items) {
+        containerEl.innerHTML = '<p class="message">No items found.</p>';
+        return;
+      }
+      Object.keys(items).forEach(key => {
+        const item = items[key];
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+        itemDiv.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+          ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}" style="max-width:100%; height:auto; margin-bottom: 0.5rem; border-radius: 4px;" />` : ''}
+          <p class="price">$${item.price.toFixed(2)}</p>
+          <div>
+            <button class="buy-btn" data-key="${key}" data-category="${container}">Buy</button>
+            <button class="cart-btn" data-key="${key}" data-category="${container}">Add to Cart</button>
+          </div>
+        `;
+        containerEl.appendChild(itemDiv);
+      });
+      // Add event listeners for buy and cart buttons
+      setTimeout(() => {
+        containerEl.querySelectorAll('.buy-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            const key = button.getAttribute('data-key');
+            const category = button.getAttribute('data-category');
+            const item = window[category + 'Data'] ? window[category + 'Data'][key] : null;
+            if (item) {
+              localStorage.setItem('shoppingCart', JSON.stringify([{...item, quantity: 1}]));
+              window.location.href = 'cart.html';
+            }
+          });
+        });
+        containerEl.querySelectorAll('.cart-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            const key = button.getAttribute('data-key');
+            const category = button.getAttribute('data-category');
+            const item = window[category + 'Data'] ? window[category + 'Data'][key] : null;
+            if (item) {
+              let cart = localStorage.getItem('shoppingCart');
+              cart = cart ? JSON.parse(cart) : [];
+              const existingIndex = cart.findIndex(ci => ci.name === item.name);
+              if (existingIndex >= 0) {
+                cart[existingIndex].quantity += 1;
+              } else {
+                cart.push({...item, quantity: 1});
+              }
+              localStorage.setItem('shoppingCart', JSON.stringify(cart));
+              alert(`${item.name} added to cart.`);
+            }
+          });
+        });
+      }, 100);
+    }
+
+    // Fetch and display mens wear items
+    database.ref('mens_wear').on('value', (snapshot) => {
+      window.mensItemsContainerData = snapshot.val();
+      displayItems('mensItemsContainer', window.mensItemsContainerData, 'mensLoadingMessage');
+    }, (error) => {
+      document.getElementById('mensLoadingMessage').textContent = 'Error loading mens items: ' + error.message;
+    });
+
+    // Fetch and display womens wear items
+    database.ref('womens_wear').on('value', (snapshot) => {
+      window.womensItemsContainerData = snapshot.val();
+      displayItems('womensItemsContainer', window.womensItemsContainerData, 'womensLoadingMessage');
+    }, (error) => {
+      document.getElementById('womensLoadingMessage').textContent = 'Error loading womens items: ' + error.message;
+    });
+
+    // Fetch and display kids boys wear items
+    database.ref('kids_boys_wear').on('value', (snapshot) => {
+      window.kidsBoysItemsContainerData = snapshot.val();
+      displayItems('kidsBoysItemsContainer', window.kidsBoysItemsContainerData, 'kidsBoysLoadingMessage');
+    }, (error) => {
+      document.getElementById('kidsBoysLoadingMessage').textContent = 'Error loading kids boys items: ' + error.message;
+    });
+
+    // Fetch and display kids girls wear items
+    database.ref('kids_girls_wear').on('value', (snapshot) => {
+      window.kidsGirlsItemsContainerData = snapshot.val();
+      displayItems('kidsGirlsItemsContainer', window.kidsGirlsItemsContainerData, 'kidsGirlsLoadingMessage');
+    }, (error) => {
+      document.getElementById('kidsGirlsLoadingMessage').textContent = 'Error loading kids girls items: ' + error.message;
+    });
+
+    // Header button scroll handlers
+    document.getElementById('mensWearBtn').addEventListener('click', () => {
+      document.getElementById('mensSection').scrollIntoView({ behavior: 'smooth' });
+    });
+    document.getElementById('womensWearBtn').addEventListener('click', () => {
+      document.getElementById('womensSection').scrollIntoView({ behavior: 'smooth' });
+    });
+    document.getElementById('kidsBoysBtn').addEventListener('click', () => {
+      document.getElementById('kidsBoysSection').scrollIntoView({ behavior: 'smooth' });
+    });
+    document.getElementById('kidsGirlsBtn').addEventListener('click', () => {
+      document.getElementById('kidsGirlsSection').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Logout button
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    });
+  </script>
+
+  <script>
+    // Animate category sections and items on load
+    function animateItems(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const items = container.querySelectorAll('.item');
+      container.parentElement.classList.add('visible');
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('visible');
+        }, index * 150);
+      });
+    }
+
+    // Modify displayItems to call animateItems after rendering
+    const originalDisplayItems = displayItems;
+    displayItems = function(container, items, loadingMessageId) {
+      originalDisplayItems(container, items, loadingMessageId);
+      animateItems(container);
+    };
+  </script>
+
+  <!-- Removed all information at the bottom of the home.html page as requested -->
+</body>
+</html>
